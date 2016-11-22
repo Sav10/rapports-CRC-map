@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<head>
+  <title>Les rapports de la cour des comptes géolocalisés | Dataplazza</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="static/L.Control.Sidebar.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
+  <script src="static/jquery-1.11.3.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="static/typeahead.bundle.min.js"></script>
+  <script src="static/L.Control.Sidebar.js"></script>
+  <link rel="icon" type="image/png" href="static/rect01.png">
+
+
+
+
+
+  <style>
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .legend {
+      padding: 0px 0px;
+      font: 10px sans-serif;
+      background: white;
+      background: rgba(255,255,255,0.8);
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      border-radius: 5px;
+    }
+
+    .key path {
+      display: none;
+    }
+    .chart text {
+      font: 11px sans-serif;
+      text-anchor: end;
+    }
+
+    .chart text.parti_name {
+      fill: black;
+      font: 11px sans-serif;
+      text-anchor: start;
+    }
+
+
+    .typeahead,
+    .tt-query,
+    .tt-hint {
+      width: 250px;
+      height: 32px;
+      padding: 5px 12px;
+      font-size: 15px;
+      line-height: 24px;
+      border: 2px solid #ccc;
+      -webkit-border-radius: 8px;
+      -moz-border-radius: 8px;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .typeahead {
+      background-color: #fff;
+    }
+
+    .typeahead:focus {
+      border: 2px solid #0097cf;
+    }
+
+    .tt-query {
+      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    }
+
+    .tt-hint {
+      color: #999
+    }
+
+    .tt-menu {
+      width: 250px;
+      margin: 12px 0;
+      padding: 8px 0;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      -webkit-border-radius: 8px;
+      -moz-border-radius: 8px;
+      border-radius: 8px;
+      -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+      -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+      box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    }
+
+    .tt-suggestion {
+      padding: 3px 20px;
+      font-size: 15px;
+      line-height: 24px;
+    }
+
+    .tt-suggestion:hover {
+      cursor: pointer;
+      color: #fff;
+      background-color: #0097cf;
+    }
+
+    .tt-suggestion.tt-cursor {
+      color: #fff;
+      background-color: #0097cf;
+
+    }
+
+    .tt-suggestion p {
+      margin: 0;
+    }
+
+    .gist {
+      font-size: 14px;
+    }
+
+    /* example specific styles */
+    /* ----------------------- */
+
+    #custom-templates .empty-message {
+      padding: 5px 10px;
+      text-align: center;
+    }
+
+
+    #remote .typeahead-container{
+
+
+    }
+
+    nav.navbar-default{
+
+
+
+    }
+
+    #myNavbar {
+      top: 20px;
+    }
+
+    #intro_top {
+     top: 0;
+     position: fixed;
+     background-color: #eee;
+     height: 20px;
+     width: 100%;
+     z-index: 200;
+   }
+
+   #map{
+    top:  0px;
+    float: left;
+  }
+
+  .leaflet-top {
+    top: 70px;
+  }
+
+  #remote{
+
+    margin-right: 2px;
+
+  }
+  #bouton_t1_t2{
+
+    margin-top: 7px;
+
+  }
+
+  #right_pannel{
+    margin-top: 74px;
+    margin-left: 2px;
+    float: left;
+
+  }
+
+  .panel-default{
+
+    /*padding: 10px;*/
+  }
+
+  #initialize{
+    cursor: pointer;
+    height: 7px;
+    font-size: 11px;
+    float: right;
+  }
+
+  #initialize .close{
+    color:rgba(255, 51, 0, 0.94);
+    font-size: 15px;
+    padding-left: 5px;
+    opacity:1;
+  }
+
+  #map{
+
+    width: 70%;
+    height: 100%;
+  }
+
+
+  #right_pannel{
+    width: 27%;
+    height: 100%;
+
+  }
+
+#dataplazza_btn{
+
+      line-height: 34px;
+    margin-right: -19px;
+}
+
+
+.leaflet-sidebar.visible .close{
+  z-index: 3000;
+}
+
+  @media (max-width: 767px) {
+
+
+.legend.leaflet-control{
+
+  margin-top: -30px;
+}
+
+    #right_pannel{
+      float: none;
+      width:100%
+
+    }
+    #map{
+
+      width: 100%;
+      height: 100%;
+    }
+
+
+
+  }
+
+</style>
+</head>
+
+<body>
+  <p id="intro_top" class="text-center text-primary"><strong>Rapports des Chambres régionales des comptes</strong></p>
+  <nav id="myNavbar" class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="container">
+
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarCollapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <a href="http://www.dataplazza.com" class="btn btn-md" id="dataplazza_btn">
+          <span class="glyphicon glyphicon-home"></span> Dataplazza
+        </a>
+        <div id="remote" class="navbar-form navbar-right">
+          <div class="typeahead-container">
+            <input class="typeahead" type="text" placeholder="Rechercher une commune">
+          </div>
+          <div id='initialize'></div>
+
+        </div>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="nav navbar-nav">
+          <li  class="active"><a href="index.html">Tous les rapports</a></li>
+          <li ><a href="departements.html">Par département</a></li>
+          <li ><a href="a_propos.html">A propos</a></li>
+
+        </ul>
+        <!-- /.navbar-collapse -->
+      </div>
+    </div>
+
+  </nav>
+  <div id="sidebar">
+  </div>
+  <div id="map"></div>
+  <div id="right_pannel">
+  </div>
+
+
+
+  <script>
+
+    var cities = ['Bordeaux', 'Bressuire', 'Agen', 'Gradignan', 'Vincennes', 'Le Bouscat', 'Mont-de-Marsan', 'Fécamp', 'Lanester', 'Strasbourg', 'Bourges', 'Dijon', 'Versailles', 'Lorient', 'Quiberon', 'Parthenay', 'Nevers', 'Saint-Gilles-Croix-de-Vie', 'Séné', 'Selles-Saint-Denis', 'Limoges', 'Notre-dame-de-Bliquetuit', 'Pouldreuzic', 'Capesterre-Belle-Eau', 'Saint-Gervais-les-Bains', 'Carcassonne', "Gonfreville-L'Orcher", 'Rouen', 'Saintes', 'Bruges', 'Douarnenez', 'Pléneuf-Val-André', 'Paimboeuf', 'La Nouaye', 'Roquebrune-Cap-Martin', 'Aurillac', 'Perpignan', 'Plouguerneau', 'Semur-en-Auxois', 'Laval', 'Nancy', 'Noyon', 'Montreuil-sur-Ille', 'Bellac', 'Audierne', 'Bruyères', 'Catus', 'Valence', 'Rémire-Montjoly', 'Montpellier', 'Saint-Alban', 'Condom', 'Wattrelos', 'Le Havre', 'Grenoble', 'Bayonne', 'Lagord', 'Vern-sur-Seiche', 'Auxerre', 'La Turballe', 'Brumath', 'Blois', 'Pau', 'Chartres', 'Bénodet', "L'Union", 'Saint-Malo', 'Caen', 'Vesoul', 'Chazey-sur-Ain', 'Schiltigheim', 'Saint-Vulbas', 'Cholet', 'Lisieux', 'Les Pieux', 'Cestas', 'Neuville-aux-Bois', 'Rumilly', 'Vendôme', 'Quévert', "Saint-Seurin-sur-l'Isle", 'Nantes', 'Bon-Encontre', 'Cléder', 'Guebwiller', 'Lablachère', 'Nyons', 'Grugny', 'Villeneuve-de-Marsan', 'Périgueux', 'Betton', 'Lesneven', 'Périgny', 'Tomblaine', 'Bussang', 'Le Thillot', 'Aix-en-Provence', 'Niederbronn-les-Bains', 'Cahors', 'Gahard', 'Châtel-sur-Moselle', 'Uckange', 'Saint-Etienne-au-Mont', 'Lille', 'Vannes', 'Biarritz', 'Maizières-lès-Metz', 'Châlons-en-Champagne', 'Sedan', 'Coulounieix-Chamiers', 'Saint-Michel-de-Rieufret', 'CHAUDES-AIGUES', 'Oloron-Sainte-Marie', 'La Rochelle',
+    "Saint-Aubin d'Aubigne", 'Anglet', 'Janzé', 'Navarrenx', 'Saint-Jean-de-Marsacq', 'Saint-Vincent-de-Tyrosse', 'Castets', 'Ribérac', 'Chaville', 'Colmar', 'Bourg-en-Bresse', 'ECHIROLLES', 'Crest', 'Nogent-sur-Marne', 'Toulon', 'Trégunc', 'Fraize', 'Chaumont', 'Nice', 'Gournay-en-Bray', 'Rue de la Commune de Paris', 'Paris', 'Tours', 'Munster', 'Brive-la-Gaillarde', 'Montargis', 'Gap', 'Aubagne', 'Amilly', 'Montgeron', 'Belley', 'seyssinet-pariset', 'Gex', 'Lavelanet', 'Cancale',
+    "Enquête de la politique d'accueil de la petite enfance", 'Lucé', 'Guer', 'Mondoubleau', 'Evreux', 'Reims', 'Gandrange', 'Troyes', 'Ploemeur', 'Montberon', 'Clermont-Ferrand', 'Archamps', 'Villefontaine', 'Fontaine', 'Gray', 'Calais', 'Rosporden', 'Saint-Brieuc', 'Barbaste', 'Angers', 'Quimper', 'Benquet', 'Rombas', 'Mont-Saint-Martin', 'Darney', 'Mirecourt', 'Saint-Laurent-du-Var', 'Granville', 'Nort-sur-Erdre', 'Mourenx', 'Eyguières', 'Poitiers', 'Lacq', 'Saint-Etienne', 'Narbonne', 'Riantec', 'Amiens', 'Lamarche', 'Bitche', 'Epernay', 'Martigues', 'Bois-Colombes', "Saint-Maixent-l'École", 'Saint-Pol-de-Leon', 'Saverne', 'Saint-Dizier', "Saint-André-de-L'Eure", 'Domloup', 'Erquy', 'Saint-Georges-de-Chesne', 'Alençon', 'Questembert', 'Cherbourg-Octeville', 'Orléans', 'Thann', 'Guidel', 'Saint-Marcellin', 'BEUZEVILLE', 'Mende', 'Metz', 'Rennes', 'Toulouse', 'Senones', 'Fort-de-France', 'La Gouesnière', 'Pordic', 'Melesse', 'Les Angles', 'Lourdes', 'Gauchy', 'Dunkerque', 'Arras', 'Trélévern', 'Carhaix-Plouguer', 'Lingolsheim', 'Mainvilliers', 'Pierrefitte-sur-Seine', 'Decazeville', 'Saint-Genis-Pouilly', 'Thônes', 'Villers-Bocage', 'Flers', 'Tulle', 'Agneaux', 'La Queue-en-Brie', 'Saint-Savin', 'Epinal', 'Lisle-sur-Tarn', 'Gramat', 'Le Cannet', 'Orleans', 'Roullet-Saint-Estèphe', 'Casteljaloux', 'Gujan-Mestras', 'Martignas-sur-Jalle', 'Cernay', 'Place de la Mairie', 'Pierrelatte', 'Yutz', 'Mougins', 'Nérac', 'CHAUMONT', 'Altkirch', 'La Gacilly', 'Avignon', 'Pithiviers', 'Saint-André-de-Cubzac', 'Plérin', 'Landéan', 'Argentan', 'Graveson', 'Couhé', 'Quimperlé', 'ANGERS', 'Verdun', 'Antrain', 'Figeac', 'Le Mans', 'Haute-Goulaine', 'Sin-le-Noble', 'Saint-Renan', 'Bours', 'Durtal', 'La Roche-sur-Yon', 'Freyming-Merlebach', 'Le Poiré-sur-Vie', 'Tarbes', 'Nanterre', 'Sannois', 'Meaux', 'Remiremont', 'Honfleur', 'Plourivo', 'Angoulême', 'Argenton-sur-Creuse', 'Confolens', 'Six-Fours-les-Plages', 'Vire', 'Fréjus', 'Bar-le-Duc', 'Laxou', 'Saint-Martin-des-Combes', "Saint-Denis-d'Oléron", 'Lodève', 'Lanrivoaré', 'Concarneau', 'Crozon', 'Paimpol', 'Lanvollon', 'Fougères', 'Brest', 'Plabennec', 'Larmor-Plage', 'Armentières', 'Nogent-sur-Oise', 'Beauvais', 'Seissan', 'Castres', 'Montrevel-en-Bresse', 'Pamiers', 'Saint-Julien-en-Genevois', 'Barentin', 'bailleul', 'Ussel', 'Bonnée', 'Aubenas', 'Muret', 'Saint-Malo-de-la-Lande', 'Alès', 'Vif', 'Airvault', 'Saint-Jean-de-Maurienne', 'Royat', 'Le Perreux-sur-Marne', 'Langeais', 'Lamballe', 'Jargeau', 'Tréguier', 'Moulins-les-Metz', 'Villejuif', 'Mitry-Mory', 'Grasse', 'Bezons', 'Boulogne-sur-Mer', 'Fontainebleau', 'Pavilly', 'Bayeux', 'Joué-lès-Tours', 'Montmédy', 'Dombasle-sur-Meurthe', 'Simacourbe', 'Rouillé', 'Bobigny', 'Saint-Cast-le-Guildo', 'Saint-Lô', 'Pompey', 'Digoin', 'Bischwiller', 'Caussade', 'Cavan', 'Argenteuil', 'Roanne', 'Nocé', 'Le Breuil-sous-Argenton', 'Mulhouse', 'Maine-de-Boixe', 'Hestroff', 'Léguevin', 'Saint-Maur-des-Fossés', 'Evry', 'Saubrigues', 'Brionne', 'Yerville', 'Vertou', 'Bourgueil', 'Marciac', 'Saint-Jean-de-Monts', 'Commer', 'Nogent-sur-Seine', 'Rethel', 'Lutterbach', 'Sceaux', 'Pertuis', 'Josselin', 'Niort', 'Landerneau', 'La Ferté-Macé', 'Dieppe', 'Foix', 'Fontclaireau', 'Trouville-sur-Mer', 'Ormes', 'Pont-de-Claix', 'Fessenheim', 'Seine-Saint-Denis', 'Essonne', 'Sarzeau', 'Wissembourg', 'Pompignac', 'Saint-Quentin-de-Baron', 'Langon', 'Mauguio', 'Hossegor', 'Gravigny', 'Morlaix', 'Châteauroux', 'Saint-Germain-en-Laye', 'La Tronche', 'Avanne-Aveney', 'Abbeville', 'Valenciennes', 'Châteaudun', 'Auch', 'Martigné-Ferchaud', 'Bernay', 'Coutances', 'Longwy', 'Montbéliard', 'Dives-sur-Mer', 'Bouchemaine', 'Lombez', 'Excideuil', 'Saint-Aubin-sur-Mer', 'Sancoins', 'Lillers', 'Deauville', 'Ouistreham', 'Cran-Gevrier', 'Saint-Gaudens', 'Vichy', 'Bréhal', 'Mézidon-Canon', 'Saint-Quay-Portrieux', 'Sées', 'Le Palais', 'Dinan', 'Notre-Dame-de-Bondeville', 'Lannion', 'Mantes-la-Jolie', 'Chantepie', 'Nohic', 'Douchy-les-Mines', 'Le Portel', 'Falaise', 'Montauban', 'Cugnaux', 'Bonsecours', 'Loudéac', 'Touques', 'Le Puy-en-Velay', 'Lillebonne', 'Mauriac', 'Le Neubourg', 'Belfort', 'Privas', 'EPINAL', 'Issoudun', 'Boulogne-Billancourt', 'Asnières-sur-Seine', 'Corbeil-Essonnes', 'Jonzac', 'Bastia', 'Avallon', 'Gagny', 'Moumour', 'Grandchamps-des-Fontaines', 'Sainte-Marie', 'Pierre-Bénite', 'Saint-Paul', 'Hazebrouck', 'Ajaccio', 'Luz-Saint-Sauveur', 'Briançon', 'Cergy', 'Arcachon', 'Saint-Aubin-de-Médoc', 'Mont-Dore', 'Carpiquet', 'Etampes', 'Charnay-lès-Mâcon', 'Sainte-Foy-la-Grande', 'Saint-Barthélemy', 'Mâcon', 'La Petite-Pierre', 'Montreuil', "Saint-Jean-d'Angély", 'Roquebrune-sur-Argens', 'Lyon', 'Saint-Martin', 'Les Abymes', 'Béziers', 'Neuilly-Sur-Seine', 'Hénin-Beaumont', 'Audincourt', 'Brignais', 'Vénissieux', 'Tassin-la-demi-lune', 'Pontoise', 'Montreuil-sur-Mer', "Villeneuve-d'Ascq", 'Le Croisic', 'Brétigny-sur-Orge', 'Saint-Martin-du-Tertre', 'Cesson-Sévigné', 'Sainte-Foy-lès-Lyon', 'Mennecy', 'Mers-les-Bains', 'Saint-Pierre-et-Miquelon', 'Les Mureaux', 'Penmarch', 'Jossigny', 'Autun', 'Orthez', 'Saumur', 'Caudebec-lès-Elbeuf', 'Borgo', 'Carvin', 'Béthune', 'Maubeuge', 'Franconville', 'Montrem', 'La Baule-Escoublac', 'Châlette-sur-Loing', 'Marseille', 'Segré', 'Croix', 'Halluin', 'Wambrechies', 'Sélestat', 'Tarare', 'Meyzieu', 'Les Contamines-Montjoie', 'Sablé-sur-Sarthe', 'Carquefou', 'Villers-Cotterêts', 'Nuits-Saint-Georges', 'Châteaubriant', 'Créteil', 'Courbevoie', 'Villefranche-sur-Saône', 'Saint-Doulchard', 'Baugé', 'La Charité-sur-Loire', 'Saint-Louis', 'Etaples', 'Biscarrosse', 'Rosières-aux-Salines', "Raon-l'Etape", 'Guéret', 'Saint-Amand-les-Eaux', 'Hérouville-Saint-Clair', 'Dardilly', 'Guesnain', 'Mérignac', 'Grande-Synthe', 'Arpajon', 'Plaine', 'Vaulx-en-Velin', 'Tassin-la-Demi-Lune', 'Les Ponts-de-Cé', 'AJACCIO', 'Gennevilliers', 'Chassieu', 'Sainte-Marie-aux-Mines', 'Dax', 'Cayenne', 'Nîmes', 'Poissy', 'Coudekerque-Branche', 'Labège', 'Chirongui', 'Bourgoin-Jallieu', 'Douvrin', 'Le Barcarès', 'Orbec', 'Vaucresson', 'Lure', 'Gonesse', 'Garches', "Gonfreville-l'Orcher", 'Formerie', 'Beaurains', 'Trith-saint-Léger', 'Magny-en-Vexin', 'Marines',
+    "Saint-Cyr-au-Mont-d'Or", 'Arzacq-Arraziguet', 'Maxéville', 'Sauveterre-de-Béarn', 'Houilles', 'Champniers', 'Saint-Thibéry', 'Nontron', 'Château-Salins', 'Saint-Sébastien-sur-Loire', 'Rivedoux-Plage', "Les Sables-d'Olonne", 'Cambrai', 'Douai', 'Raismes', 'Fourmies', 'Mogneville', 'Scaër', 'La Ferté-Bernard', 'Pornic', 'Beaucaire', 'Mamoudzou', 'Dole', 'Marans', 'Saint-Nectaire', 'Montignac', 'Moncoutant', 'Dzaoudzi', 'Château-Thierry', 'Saint-Péray', 'Albertville', 'Liévin', 'Saint-Denis', 'Lunel', 'Villeneuve-de-Berg', 'Corte', 'Porto-Vecchio', 'Athis-Mons', 'Bias', 'Monistrol-sur-Loire',
+    "Clermont-de-l'Oise", 'Mandelieu-la-Napoule', 'La Tour-de-Salvagny',
+    "Pont-l'Abbé", 'Saint-Dié', 'Champs-sur-Marne', 'Lons-le-Saunier', 'Montigny-le-Bretonneux', 'Vendargues', 'Villeneuve-sur-Yonne', 'Charbonnières-les-Bains', "L'Isle-Jourdain", 'Corbie', 'Montdidier', 'Roye', 'Péronne', 'Louvroil', 'Bagneux', 'Saint-Leu-la-Forêt', 'Anzin', 'Noeux-les-Mines', 'Sainte-Geneviève-des-Bois', 'Laprade', 'Brie', 'La Garenne-Colombes', 'Drancy', 'Fleury-Mérogis', 'Savigny-sur-Orge', 'Evron', 'Hirson', 'NANTES', 'La Haie-Fouassière', 'Chelles', 'Bougival', 'Ghisonaccia', 'Péronnas', 'Evin-Malmaison', 'Saint-Paul-de-Jarrat', 'Fontenay-le-Comte', "Saint-Michel-en-l'Herm", 'Saint-Nazaire', 'Ambarès-et-Lagrave', 'Château-du-Loir', 'Trélazé', 'Jeumont', 'Felleries', "Saint-Barthélemy-d'Anjou", 'Cargèse', 'Denain', 'Buire', 'La Capelle', 'Crolles', 'Saint-Léons-en-Lévezou', 'Sangatte', 'Berck', 'Palaiseau', 'Levallois-Perret', 'Vernon', 'Saint-Pol-de-Léon', 'Saint-Quentin', 'Lens', 'Laon', 'Bresles', 'Chilly-Mazarin', 'Ploërdut', 'Saint-Egrève', 'Chantonnay', 'Château-Gontier', 'Chemillé', 'Mayenne', 'Lumio', 'Arès', 'Vendegies-sur-Ecaillon', 'Cognac', 'Pamandzi', 'Chiconi',
+    "Saint-Martin-d'Hères", 'Chambéry', 'Saint-Laurent-du-Pont', 'Colombes', 'Ferney-Voltaire', 'Bagnols-sur-Cèze', 'Vienne', 'Tourcoing', 'Acheux-en-Amiénois', 'Noyelles-lès-Vermelles', 'Billy-Berclau', 'Marck', 'Saint-Omer', 'La Londe-les-Maures', 'Corbas', 'La Flèche', 'Bauné', 'Saint-Etienne-de-Montluc', 'Prémontré', 'Helfaut', 'Creil', 'Doué-la-Fontaine',
+    "Noirmoutier-en-l'Ile", 'Marin', 'Lagny-sur-Marne', 'Juvisy-sur-Orge', 'Hesdin', 'Villeneuve-Saint-Germain'];
+
+
+    var empty_object = [{'no_rapport':'','type_rapport':'','date_envoi':'','crc':'','titre':'','note':'','type_etablissement':'Survoler les villes pour davantage de détails','lat':'','long':'','ville':'','departement':''}];
+
+
+    var data_2bis;
+
+    var map;
+
+    var marker_selected_city;
+
+// If small screen
+if ($(window).width() < 768) {var screendef = 0;}
+else{var screendef = 1;};
+
+var ZoomView_dep = 6;
+if (screendef == 0){ZoomView_dep = 5};
+// console.log(screendef);
+
+var removespecials = function (str){
+  return str.replace(/[èéêëœ]/g,"e").replace(/[àáâãäåæ]/g,"a").replace(/[ç]/g,"c").replace(/[ìíîï]/g,"i").replace(/[ðñòóôõö]/g,"o").replace(/[ùúûü]/g,"u").replace(/[ýÿ]/g,"y")
+};
+
+var prettyfy_string = function(string){return string.replace(" ","_").replace("'","_").replace("(","_").replace(")","_")};
+
+
+
+var html_chunk_pane  = '<div class="panel-body">'+
+'<small><div class="date_rapport"></div></small>' +
+'<div class="type_etablissement">Survolez les villes pour avoir davantage de détails</div>' +
+'<div><span class="ville"></span><span class="departement"></span></div>' +
+'<div class="crc"></div>' +
+'<div class="type_rapport"></div>' +
+'<div class="titre_rapport"></div>' +
+'<div class="note_container"><span class="note_rapport"></span></div>' +
+'<div class="lien_rapport"></div>' +
+'</div>';
+
+;
+
+function addSpacesFr(nStr)
+{
+  nStr += '';
+  x = nStr.split('.');
+  x1 = x[0];
+  x2 = x.length > 1 ? '.' + x[1] : '';
+  var rgx = /(\d+)(\d{3})/;
+  while (rgx.test(x1)) {
+    x1 = x1.replace(rgx, '$1' + ' ' + '$2');
+  }
+  return x1;
+}
+
+function parseDate(input) {
+  var parts = input.split('/');
+  return new Date(parts[2], parts[1]-1, parts[0]); // Note: months are 0-based
+}
+
+var right_pannel = d3.select("#right_pannel");
+if (screendef ==0)
+{
+var right_pannel = d3.select("#sidebar");
+
+}
+
+var linear_normalised_note;
+var color_note;
+
+var pannels;
+
+var populate_panel = function(data, notempty){
+
+
+
+  pannels = right_pannel.selectAll('div.panel.panel-default')
+  .data(data);
+
+
+
+  pannels.enter().append('div')
+  .attr('class', 'panel panel-default')
+  .html(html_chunk_pane);
+
+  if (notempty ==1){
+
+    pannels.select('.ville').html(function(d){return 'Localité : <strong>' + d.ville});
+    pannels.select('.departement').html(function(d){return ', ' + d.departement + '</strong>'});
+    pannels.select('.type_etablissement').html(function(d){return 'Etablissement concerné : <strong><em>' + d.type_etablissement + '</strong></em>'});
+    pannels.select('.date_rapport').html(function(d){return 'Date du rapport : ' + d.date_envoi});
+    pannels.select('.crc').text(function(d){return 'Chambre : ' + d.crc});
+    pannels.select('.type_rapport').text(function(d){return 'Type de rapport : ' + d.type_rapport});
+    pannels.select('.titre_rapport').text(function(d){return 'Titre du rapport : ' + d.titre});
+    pannels.select('.note_rapport').html(function(d){return '<span style="color:grey">Tonalité du rapport : </span><strong>' + Math.round(linear_normalised_note(d.note)) + '</strong>'})
+    .style('color', function(d){return color_note( + d.note)});
+    pannels.select('.lien_rapport').html(function(d){return 'Lien vers le rapport : <a href="http://open-data.org/ccomptes/' + d.no_rapport + '">Rapport de la chambre régionale des comptes - ' + d.type_etablissement+' de ' + d.ville +' </a>'});
+
+  }
+
+  else{
+
+    pannels.select('.type_etablissement').html(function(d){return d.type_etablissement});
+
+  }
+
+  pannels.exit().remove();
+
+}
+
+populate_panel(empty_object, 0);
+
+
+queue()
+.defer(d3.json, 'static/france-geojson-master/departements.geojson')
+.defer(d3.csv, 'static/data/data_notes_4.csv')
+.await(makeMap)
+
+
+
+
+function makeMap(error, gjson_1,data_2) {
+
+  data_2bis = data_2;
+
+
+  data_2bis.forEach(function(d){
+
+    d.note = +d.note;
+    d.date = parseDate(d.date_envoi);
+  });
+
+d3.ascending(data_2bis, function(a,b){return a.date >b.date});
+
+// console.log(data_2bis);
+
+// var date_debfin = d3.extent(data_2bis, function(d){ return d.date});
+// console.log(date_debfin);
+
+  color_note = d3.scale.linear().domain([-700,700]).range(['magenta', 'cyan']);
+
+  linear_normalised_note = d3.scale.linear().domain([-700,700]).range([0,100]);
+
+
+  var color_note_norm = d3.scale.linear().domain([0, 100]).range(['magenta', 'cyan']);
+
+  legend_scale_ = [0,10, 20, 30, 40, 50 , 60, 70, 80, 90, 100];
+  legend_scale_colors = legend_scale_.map(color_note_norm);
+              // console.log(legend_scale_colors);
+
+              var color_note_legend = d3.scale.threshold()
+              .domain(legend_scale_)
+              .range(legend_scale_colors);    
+
+
+//https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
+//https://{s}.tile.stamen.com/toner/
+//http://{s}.basemaps.cartocdn.com/light_all/
+//http://{s}.tile.openstreetmap.fr/osmfr/
+
+if (screendef ==0)
+{
+map = L.map('map').setView([45.5, 2], ZoomView_dep);
+}
+else {
+map = L.map('map').setView([48, 2], ZoomView_dep);
+
+}
+
+L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+  maxZoom: 18,
+  minZoom: 1,
+  attribution: 'Map data (c) <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+if (screendef ==0)
+{
+
+var sidebar = L.control.sidebar('sidebar', {
+  closeButton: true,
+  position: 'left'
+});
+
+map.addControl(sidebar);
+}
+
+for (d in data_2bis){
+
+  L.circleMarker( [data_2bis[d].lat, data_2bis[d].long], {radius:4, color: color_note(data_2bis[d].note), opacity: 0.6, fillColor: color_note(data_2bis[d].note), fillOpacity: 0.6, title:d, className:"ville_" + prettyfy_string(removespecials(data_2bis[d].ville))})
+  .addTo(map)
+  .on('mouseover', function(e) {
+    var newd = +e.target.options.title;
+    var selection_city = data_2bis.filter(function(d){ return d.ville == data_2bis[newd].ville});
+    populate_panel(selection_city, 1);})
+  .on('click', function(e) {
+    var newd = +e.target.options.title;
+    var selection_city = data_2bis.filter(function(d){ return d.ville == data_2bis[newd].ville});
+    populate_panel(selection_city, 1);
+if (screendef ==0)
+{
+    sidebar.toggle();
+  }
+
+  });
+
+
+}
+
+if (screendef ==0)
+{
+
+map.on('click', function () {
+  sidebar.hide();
+})
+
+
+}
+
+var legend = L.control({position: 'topright'});
+
+legend.onAdd = function (map) {var div = L.DomUtil.create('div', 'legend'); return div};
+
+legend.addTo(map);
+
+
+
+var x = d3.scale.linear()
+.domain([0, 100])
+.range([0, 400]);
+
+var xAxis = d3.svg.axis()
+.scale(x)
+.orient("top")
+.tickSize(1)
+.tickValues([0,10, 20, 30, 40, 50 , 60, 70, 80, 90, 100]);
+
+var svg = d3.select(".legend.leaflet-control").append("svg")
+.attr("id", 'legend')
+.attr("width", 450)
+.attr("height", 40);
+
+if (screendef == 0)
+{
+  svg.attr('width', 200)
+  .attr('height', 25)
+  .attr('font-size', '9px');
+  x.range([0,160]);
+}
+
+var g = svg.append("g")
+.attr("class", "key")
+.attr("transform", "translate(25,16)");
+
+
+
+g.selectAll("rect")
+.data(color_note_legend.range().map(function(d, i) {
+  return {
+    x0: i ? x(color_note_legend.domain()[i - 1]) : x.range()[0],
+    x1: i < color_note_legend.domain().length ? x(color_note_legend.domain()[i]) : x.range()[1],
+    z: d
+  };
+}))
+.enter().append("rect")
+.attr("height", 10)
+.attr("x", function(d) {return d.x0; })
+.attr("width", function(d) { return d.x1 - d.x0; })
+.style("fill", function(d) { return d.z; });
+
+g.call(xAxis).append("text")
+.attr("class", "caption")
+.attr("y", 21)
+.text('Tonalité des rapports des CRC');
+
+var legend = L.control({position: 'topright'});
+
+legend.onAdd = function (map) {var div = L.DomUtil.create('div', 'legend'); return div};
+
+legend.addTo(map);      
+
+
+
+
+
+
+
+
+};
+
+
+
+// constructs the suggestion engine
+var cities = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.whitespace,
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  // `states` is an array of state names defined in "The Basics"
+  local: cities
+});
+
+
+$('#remote .typeahead').typeahead(null, {
+  name: 'cities',
+  // display: 'value',
+  source: cities,
+  templates: {
+    empty: [
+    '<div class="empty-message">',
+    'Pas de rapport de la cour des comptes',
+    '</div>'
+    ].join('\n')
+    // ,
+    // suggestion: Handlebars.compile('<div><strong>{{value}}</strong> – {{year}}</div>')
+  }
+});
+
+
+$('#remote .typeahead').on(
+{
+  'typeahead:selected': function(e, datum) {
+    var selection_city = data_2bis.filter(function(d){ return d.ville == datum});
+    d3.selectAll('.leaflet-clickable').attr('stroke-opacity', 0.3).attr('fill-opacity', 0.3).attr('stroke-width', 2);
+    d3.selectAll('.ville_' + prettyfy_string(removespecials(selection_city[0].ville))).attr('stroke-opacity', 0.9).attr('fill-opacity', 0.9).attr('stroke-width', 9);
+    map.setView([selection_city[0].lat, selection_city[0].long], 9, {animation: true});
+            // marker_selected_city = L.circleMarker( [selection_city[0].lat, selection_city[0].long], {radius:15, color: 'yellow', opacity: 0.6, 'fill-opacity': 0}).addTo(map);
+            d3.select('#initialize').html('Annuler la recherche<a class="close">×</a>');
+
+            
+
+
+            populate_panel(selection_city, 1);
+
+
+
+          },
+          'typeahead:autocompleted': function(e, datum) {
+          }
+        });
+
+d3.select('#initialize')
+.on('click', function(d){
+  d3.select('#initialize').html('');
+  map.setView([48, 2], ZoomView_dep, {animation: true});
+  d3.selectAll('.leaflet-clickable').attr('stroke-opacity', 0.6).attr('fill-opacity', 0.6).attr('stroke-width', 2);
+// map.removeLayer(marker_selected_city);
+})
+
+// L.circleMarker( [data_2bis[d].lat, data_2bis[d].long], {radius:5, color: color_note(data_2bis[d].note), opacity: 0.6, fillColor: color_note(data_2bis[d].note), fillOpacity: 0.6, title:d, className:"ville_" + prettyfy_string(removespecials(data_2bis[d].ville))})
+
+</script>
+
+
+</body>
+</html>

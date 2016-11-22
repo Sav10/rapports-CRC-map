@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<head>
+  <title>Les rapports de la cour des comptes géolocalisés | Dataplazza</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+  <script src="static/jquery-1.11.3.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <link rel="icon" type="image/png" href="static/rect01.png">
+
+
+
+
+
+  <style>
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .legend {
+      padding: 0px 0px;
+      font: 10px sans-serif;
+      background: white;
+      background: rgba(255,255,255,0.8);
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      border-radius: 5px;
+    }
+
+    .key path {
+      display: none;
+    }
+    .chart text {
+      font: 11px sans-serif;
+      text-anchor: end;
+    }
+
+    .chart text.parti_name {
+      fill: black;
+      font: 11px sans-serif;
+      text-anchor: start;
+    }
+
+
+    .typeahead,
+    .tt-query,
+    .tt-hint {
+      width: 250px;
+      height: 32px;
+      padding: 5px 12px;
+      font-size: 15px;
+      line-height: 24px;
+      border: 2px solid #ccc;
+      -webkit-border-radius: 8px;
+      -moz-border-radius: 8px;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .typeahead {
+      background-color: #fff;
+    }
+
+    .typeahead:focus {
+      border: 2px solid #0097cf;
+    }
+
+    .tt-query {
+      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    }
+
+    .tt-hint {
+      color: #999
+    }
+
+    .tt-menu {
+      width: 250px;
+      margin: 12px 0;
+      padding: 8px 0;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      -webkit-border-radius: 8px;
+      -moz-border-radius: 8px;
+      border-radius: 8px;
+      -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+      -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+      box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    }
+
+    .tt-suggestion {
+      padding: 3px 20px;
+      font-size: 15px;
+      line-height: 24px;
+    }
+
+    .tt-suggestion:hover {
+      cursor: pointer;
+      color: #fff;
+      background-color: #0097cf;
+    }
+
+    .tt-suggestion.tt-cursor {
+      color: #fff;
+      background-color: #0097cf;
+
+    }
+
+    .tt-suggestion p {
+      margin: 0;
+    }
+
+    .gist {
+      font-size: 14px;
+    }
+
+    /* example specific styles */
+    /* ----------------------- */
+
+    #custom-templates .empty-message {
+      padding: 5px 10px;
+      text-align: center;
+    }
+
+
+    #remote .typeahead-container{
+      visibility  : hidden;
+
+
+    }
+
+    nav.navbar-default{
+
+
+
+    }
+
+    #myNavbar {
+      top: 20px;
+    }
+
+    #intro_top {
+     top: 0;
+     position: fixed;
+     background-color: #eee;
+     height: 20px;
+     width: 100%;
+     z-index: 200;
+   }
+
+   #map{
+    top:  0px;
+    float: left;
+  }
+
+  .leaflet-top {
+    top: 70px;
+  }
+
+  #remote{
+
+    margin-right: 2px;
+
+  }
+  #bouton_t1_t2{
+
+    margin-top: 7px;
+
+  }
+
+  #right_pannel{
+    margin-top: 74px;
+    margin-left: 2px;
+    float: left;
+
+  }
+
+  .panel-default{
+
+    /*padding: 10px;*/
+  }
+
+  #initialize{
+    cursor: pointer;
+    height: 7px;
+    font-size: 11px;
+    float: right;
+  }
+
+  #initialize .close{
+    color:rgba(255, 51, 0, 0.94);
+    font-size: 15px;
+    padding-left: 5px;
+    opacity:1;
+  }
+
+  #map{
+
+    width: 70%;
+    height: 100%;
+  }
+
+
+  #right_pannel{
+    width: 27%;
+    height: 100%;
+
+  }
+
+
+section.main{
+
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 100px;
+    max-width: 1000px;
+
+}
+
+section.main .jumbotron{
+    background-color: #f9f9f9;
+    padding: 15px;
+}
+
+
+section.main .jumbotron p {
+    font-size: 15px;
+
+}
+
+#dataplazza_btn{
+
+      line-height: 34px;
+    margin-right: -19px;
+}
+
+  @media (max-width: 767px) {
+
+
+.legend.leaflet-control{
+
+  margin-top: -30px;
+}
+
+    #right_pannel{
+      float: none;
+      width:100%
+
+    }
+    #map{
+
+      width: 100%;
+      height: 100%;
+    }
+
+h3{
+
+  font-size: 20px;
+}
+
+  }
+
+</style>
+</head>
+
+<body>
+  <p id="intro_top" class="text-center text-primary"><strong>Rapports des Chambres régionales des comptes </strong></p>
+  <nav id="myNavbar" class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="container">
+
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarCollapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <a href="http://www.dataplazza.com" class="btn btn-md" id="dataplazza_btn">
+          <span class="glyphicon glyphicon-home"></span> Dataplazza
+        </a>
+        <div id="remote" class="navbar-form navbar-right">
+          <div class="typeahead-container">
+            <input class="typeahead" type="text" placeholder="Rechercher une commune">
+          </div>
+          <div id='initialize'></div>
+
+        </div>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="nav navbar-nav">
+          <li><a href="index.html">Tous les rapports</a></li>
+          <li ><a href="departements.html">Par département</a></li>
+          <li class="active" ><a href="a_propos.html">A propos</a></li>
+
+        </ul>
+        <!-- /.navbar-collapse -->
+      </div>
+    </div>
+
+  </nav>
+<!--   <div class="container">
+  <div class="jumbotron">
+  	<h3>A propos de cette visualisation :</h3>
+
+
+  </div> 
+  </div> -->
+
+
+    <section class="main">
+     <div class="jumbotron">
+    <h3>A propos de cette visualisation :</h3>
+
+    <p>Cette visualisation représente 1321 rapports rédigés et publiés entre janvier 2013 et novembre 2015 par les Chambres régionales des Comptes.</p>
+
+    <p>
+    Les couleurs et la tonalité ont été calculées en fonction du champ sémantique présent dans chaque rapport.
+    Un lexique a été élaboré à cet effet par des membres de  la cour des comptes à l'occasion d'un "data day", contenant des termes connotés négativement, et d'autres positivement, avec chacun un poids déterminé.<br />
+    Chaque rapport a été passé au crible du lexique, et une tonalité a été calculée, sur une échelle de 0 à 100, allant de très négatif à très positif.
+    Pour les rapports exceptionnellement négatifs, la tonalité peut être inférieure à 0.<br /><br />
+   <!--  Les rapports contenant un poids particulièrement importants de termes négatifs peuvent même avoir une tonalité négative. -->
+
+   Davantage de précisions ici :
+   <a href="http://data.blog.lemonde.fr/2016/05/30/votre-region-a-t-elle-la-culture-de-la-bonne-gestion/">Les decodeurs : votre région a-elle la culture de la bonne gestion</a>
+    </p>
+
+         <p>La présente datavisualisation n'a pas prétention à l'exhaustivité. Un nombre conséquent de rapports a été analysés et positionnés sur la carte, mais manquent :</p>
+    <ul>
+    <li>Les rapports non publiés</li>
+    <li>Les rapports non géolocalisables.</li>
+    <li>Les rapports antérieurs à 2013</li>
+
+    </ul>
+
+
+
+    </div>
+  </section>
+
+
+
+  
+
+
+</body>
+</html>

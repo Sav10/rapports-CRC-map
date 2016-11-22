@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<head>
+  <title>Les rapports de la cour des comptes par département | Dataplazza</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+ <link rel="stylesheet" href="static/leaflet.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="static/L.Control.Sidebar.css" />
+
+  <script src="static/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
+  <script src="static/jquery-1.11.3.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="static/typeahead.bundle.min.js"></script>
+  <script src="static/L.Control.Sidebar.js"></script>
+  <link rel="icon" type="image/png" href="static/rect01.png">
+
+
+
+
+
+  <style>
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .legend {
+      padding: 0px 0px;
+      font: 10px sans-serif;
+      background: white;
+      background: rgba(255,255,255,0.8);
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      border-radius: 5px;
+    }
+
+    .key path {
+      display: none;
+    }
+    .chart text {
+      font: 11px sans-serif;
+      text-anchor: end;
+    }
+
+    .chart text.parti_name {
+      fill: black;
+      font: 11px sans-serif;
+      text-anchor: start;
+    }
+
+
+    .typeahead,
+    .tt-query,
+    .tt-hint {
+      width: 250px;
+      height: 32px;
+      padding: 5px 12px;
+      font-size: 15px;
+      line-height: 24px;
+      border: 2px solid #ccc;
+      -webkit-border-radius: 8px;
+      -moz-border-radius: 8px;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .typeahead {
+      background-color: #fff;
+    }
+
+    .typeahead:focus {
+      border: 2px solid #0097cf;
+    }
+
+    .tt-query {
+      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    }
+
+    .tt-hint {
+      color: #999
+    }
+
+    .tt-menu {
+      width: 250px;
+      margin: 12px 0;
+      padding: 8px 0;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      -webkit-border-radius: 8px;
+      -moz-border-radius: 8px;
+      border-radius: 8px;
+      -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+      -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+      box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    }
+
+    .tt-suggestion {
+      padding: 3px 20px;
+      font-size: 15px;
+      line-height: 24px;
+    }
+
+    .tt-suggestion:hover {
+      cursor: pointer;
+      color: #fff;
+      background-color: #0097cf;
+    }
+
+    .tt-suggestion.tt-cursor {
+      color: #fff;
+      background-color: #0097cf;
+
+    }
+
+    .tt-suggestion p {
+      margin: 0;
+    }
+
+    .gist {
+      font-size: 14px;
+    }
+
+    /* example specific styles */
+    /* ----------------------- */
+
+    #custom-templates .empty-message {
+      padding: 5px 10px;
+      text-align: center;
+    }
+
+
+    #remote .typeahead-container{
+
+
+    }
+
+    nav.navbar-default{
+
+
+
+    }
+
+    #myNavbar {
+      top: 20px;
+    }
+
+    #intro_top {
+     top: 0;
+     position: fixed;
+     background-color: #eee;
+     height: 20px;
+     width: 100%;
+     /*z-index: 500;*/
+   }
+
+   #map{
+    top:  0px;
+    float: left;
+  }
+
+  .leaflet-top {
+    /*top: 70px;*/
+  }
+
+  #remote{
+
+    margin-right: 2px;
+    visibility  : hidden;
+
+  }
+
+  #bouton_t1_t2{
+
+    margin-top: 7px;
+
+  }
+
+  #right_pannel{
+    margin-top: 74px;
+    margin-left: 2px;
+    float: left;
+
+  }
+
+/*  #sidebar{
+    display: none;
+  }*/
+
+    #map{
+
+      width: 70%;
+      height: 100%;
+    }
+
+
+#dataplazza_btn{
+
+      line-height: 34px;
+    margin-right: -19px;
+}
+
+  @media (max-width: 767px) {
+
+    .legend.leaflet-control{
+
+      margin-top: -30px;
+    }
+
+    #right_pannel{
+      float: none;
+      width:100%
+
+    }
+    #map{
+
+      width: 100%;
+    }
+/*    #sidebar{
+      display: block;
+    }
+    #right_pannel{
+      display: none;
+
+    }*/
+    #intro_top {
+     /*z-index: 1;*/
+   }
+
+
+  #remote{
+
+    display: none;
+
+  }
+
+.leaflet-sidebar .close{
+  z-index: 800;
+}
+
+
+  }
+
+</style>
+</head>
+
+<body>
+  <p id="intro_top" class="text-center text-primary"><strong>Rapports des Chambres régionales des comptes</strong></p>
+  <nav id="myNavbar" class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="container">
+
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarCollapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="http://www.dataplazza.com" class="btn btn-md" id="dataplazza_btn">
+          <span class="glyphicon glyphicon-home"></span> Dataplazza
+        </a>
+        <div id="remote" class="navbar-form navbar-right">
+          <div class="typeahead-container">
+            <input class="typeahead" type="text" placeholder="Rechercher une commune">
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="nav navbar-nav">
+          <li ><a href="index.html">Tous les rapports</a></li>
+          <li  class="active"><a href="departements.html">Par département</a></li>
+          <li ><a href="a_propos.html">A propos</a></li>
+
+        </ul>
+        <!-- /.navbar-collapse -->
+      </div>
+    </div>
+
+  </nav>
+  <div id="sidebar">
+   <div class="panel panel-default">
+    <div class="panel-body">
+      <div id="type_etablissement">cliquer sur les départements pour davantage de détails</div>
+      <div><span id="departement"></span></div>
+      <div id="moyenne"></div>
+      <div id="nombre_rapports"></div>
+    </div>
+  </div>
+  </div>
+  <div id="map"></div>
+  <div id="right_pannel" style="width: 27%; height: 100%;">
+   <div class="panel panel-default">
+    <div class="panel-body">
+      <div id="type_etablissement">cliquer sur les départements pour davantage de détails</div>
+      <div><span id="departement"></span></div>
+      <div id="moyenne"></div>
+      <div id="nombre_rapports"></div>
+    </div>
+  </div>
+
+
+  <script>
+    var data_2bis;
+
+
+// If small screen
+if ($(window).width() < 768) {var screendef = 0;}
+else{var screendef = 1;};
+
+
+if (screendef == 1){
+  var ZoomView_dep = 6;
+  d3.select("#Sidebar")
+  .attr('display', 'none');
+}
+else{
+  var  ZoomView_dep = 5;
+  d3.select("#right_pannel")
+  .attr('display', 'none');
+}
+
+
+function addSpacesFr(nStr)
+{
+  nStr += '';
+  x = nStr.split('.');
+  x1 = x[0];
+  x2 = x.length > 1 ? '.' + x[1] : '';
+  var rgx = /(\d+)(\d{3})/;
+  while (rgx.test(x1)) {
+    x1 = x1.replace(rgx, '$1' + ' ' + '$2');
+  }
+  return x1;
+}
+
+// var right_pannel = d3.select("#right_pannel");
+
+
+
+queue()
+.defer(d3.json, 'static/france-geojson-master/departements.geojson')
+.defer(d3.json, 'static/data/score_departement_2.json')
+.await(makeMap)
+
+// d3.select("#right_pannel").style('opacity', 0);
+
+
+
+function makeMap(error, gjson_1,data_2) {
+
+  data_2bis = data_2;
+
+
+
+  function matchKey(datapoint, key_variable){
+
+            // console.log(key_variable.note);
+
+            if (typeof key_variable[datapoint] === 'undefined') {
+                                  // console.log(key_variable);
+                                  return null;
+
+                                }
+                                else {
+                                  return parseFloat(key_variable[datapoint].mean);
+                                };
+                              };
+
+
+
+                              var color_note = d3.scale.linear().domain([-320, 200]).range(['magenta', 'cyan']);
+
+                              var linear_normalised_note = d3.scale.linear().domain([-320,200]).range([0,100]);
+
+                              var color_note_norm = d3.scale.linear().domain([0, 100]).range(['magenta', 'cyan']);
+
+                              legend_scale_ = [0,10, 20, 30, 40, 50 , 60, 70, 80, 90, 100];
+                              legend_scale_colors = legend_scale_.map(color_note_norm);
+
+                              var color_note_legend = d3.scale.threshold()
+                              .domain(legend_scale_)
+                              .range(legend_scale_colors);    
+                              ;
+
+//https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
+//https://{s}.tile.stamen.com/toner/
+//http://{s}.basemaps.cartocdn.com/light_all/
+//http://{s}.tile.openstreetmap.fr/osmfr/
+
+if (screendef ==0)
+{
+map = L.map('map').setView([45.5, 2], ZoomView_dep);
+}
+else {
+map = L.map('map').setView([48, 2], ZoomView_dep);
+
+}
+
+L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+  maxZoom: 18,
+  minZoom: 1,
+  attribution: 'Map data (c) <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+if (screendef == 0)
+{
+
+var sidebar = L.control.sidebar('sidebar', {
+  closeButton: true,
+  position: 'left'
+});
+map.addControl(sidebar);
+
+}
+
+function style_1(feature) {
+            // console.log(feature.properties);
+
+
+            return {
+              fillColor: color_note(matchKey(feature.properties.code, data_2)),
+              weight: 1,
+              opacity: 0.2,
+              color: 'black',
+              fillOpacity: 0.7
+            };
+          }
+          
+if (screendef == 0)
+  {css_preselector = "#sidebar"}
+else{css_preselector = "#right_pannel"}
+          
+          // gJson_layer_1 = L.geoJson(gjson_1, {style: style_1}).addTo(map)
+;
+          
+          // gJson_layer_2 = L.geoJson(gjson_1, {style: style_2}).addTo(map)
+          
+          gJson_layer_1 = L.geoJson(gjson_1, {style: style_1}).addTo(map);
+          gJson_layer_2 = L.geoJson(gjson_1, {style: style_1}).addTo(map);
+
+          gJson_layer_3 = L.geoJson(gjson_1, {style: style_1}).addTo(map);
+
+        // L.marker([48, 3]).addTo(map).on('click', function () {
+        //     sidebar.toggle();
+        // });
+
+if (screendef ==1)
+{
+          gJson_layer_3
+          .on('mouseover', function(e) {
+            var newd = e.layer.feature.properties.code;
+            d3.select(css_preselector + ' #departement').html('Département : <strong>' +data_2bis[newd].departement + ', (' + newd + ')');
+            d3.select(css_preselector + ' #type_etablissement').text('');
+            d3.select(css_preselector + ' #moyenne').html('Tonalité moyenne : <strong>' + Math.round(linear_normalised_note(data_2bis[newd].mean))  + '</strong>');
+            d3.select(css_preselector + ' #nombre_rapports').html('Nombre de rapports de la chambre régionale des comptes pour ce département : <strong>' + data_2bis[newd].size + '</strong>');
+          });
+}
+else
+{
+          gJson_layer_3
+          .on('click', function(e) {
+            var newd = e.layer.feature.properties.code;
+            d3.select(css_preselector + ' #departement').html('Département : <strong>' +data_2bis[newd].departement + ', (' + newd + ')');
+            d3.select(css_preselector + ' #type_etablissement').text('');
+            d3.select(css_preselector + ' #moyenne').html('Tonalité moyenne  : <strong>' + Math.round(linear_normalised_note(data_2bis[newd].mean))  + '</strong>');
+            d3.select(css_preselector + ' #nombre_rapports').html('Nombre de rapports de la chambre régionale des comptes pour ce département  : <strong>' + data_2bis[newd].size + '</strong>');
+    sidebar.show();
+    // d3.select("#map .leaflet-sidebar.left").classed("visible", true);
+
+
+          });
+
+}
+
+if (screendef ==0)
+{
+
+// map.on('click', function () {
+//   sidebar.hide();
+
+// })
+
+
+        // sidebar.on('show', function () {
+        //     console.log('Sidebar will be visible.');
+        //     d3.select("#map .leaflet-sidebar.left").classed("visible", true);
+        // });
+
+        // sidebar.on('shown', function () {
+        //     console.log('Sidebar is visible.');
+        // });
+
+        // sidebar.on('hide', function () {
+        //     console.log('Sidebar will be hidden.');
+        // });
+
+        // sidebar.on('hidden', function () {
+        //     console.log('Sidebar is hidden.');
+        // });
+
+        // L.DomEvent.on(sidebar.getCloseButton(), 'click', function () {
+        //     console.log('Close button clicked.');
+        // });
+
+
+}
+
+          
+
+          var legend = L.control({position: 'topright'});
+
+          legend.onAdd = function (map) {var div = L.DomUtil.create('div', 'legend'); return div};
+
+          legend.addTo(map);
+
+
+
+
+
+          var x = d3.scale.linear()
+          .domain([0, 100])
+          .range([0, 400]);
+
+          var xAxis = d3.svg.axis()
+          .scale(x)
+          .orient("top")
+          .tickSize(1)
+          .tickValues([0,10, 20, 30 , 40, 50, 60, 70, 100]);
+
+          var svg = d3.select(".legend.leaflet-control").append("svg")
+          .attr("id", 'legend')
+          .attr("width", 450)
+          .attr("height", 40);
+
+if (screendef == 0)
+{
+  svg.attr('width', 200)
+  .attr('height', 25)
+  .attr('font-size', '9px');
+  x.range([0,160]);
+}
+
+
+          var g = svg.append("g")
+          .attr("class", "key")
+          .attr("transform", "translate(25,16)");
+
+// console.log(color.range());
+
+g.selectAll("rect")
+.data(color_note_legend.range().map(function(d, i) {
+  return {
+    x0: i ? x(color_note_legend.domain()[i - 1]) : x.range()[0],
+    x1: i < color_note_legend.domain().length ? x(color_note_legend.domain()[i]) : x.range()[1],
+    z: d
+  };
+}))
+.enter().append("rect")
+.attr("height", 10)
+.attr("x", function(d) {return d.x0; })
+.attr("width", function(d) { return d.x1 - d.x0; })
+.style("fill", function(d) { return d.z; });
+
+g.call(xAxis).append("text")
+.attr("class", "caption")
+.attr("y", 21)
+.text('Tonalité moyenne des rapports des CRC');
+
+var legend = L.control({position: 'topright'});
+
+legend.onAdd = function (map) {var div = L.DomUtil.create('div', 'legend'); return div};
+
+legend.addTo(map);      
+
+
+};
+
+
+var find_city = new Bloodhound({
+
+  datumTokenizer: Bloodhound.tokenizers.whitespace,
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  remote: {
+    url: 'http://map-api1.dataplazza.com/req1?id=%QUERY',
+
+    wildcard: '%QUERY'
+    //local:dt01
+  },
+  limit:10
+});
+
+//city_fr.initialize();
+var data_city;
+var formatCityDep= function(data){
+
+  return data.commune+", ("+data.code_departement + ")" ;
+}
+
+$('#remote .typeahead').typeahead(null, {
+
+ display: function( data ) {
+  data_city = data;
+  return formatCityDep( data );
+},
+source: find_city,
+limit:7,
+templates: {
+  empty: 'Aucun resultat'
+}
+})
+
+$('#remote .typeahead').on(
+{
+  'typeahead:selected': function(e, datum) {
+    y
+    window.location.href =  '/communes_droite/' +datum.code_departement + '/index.html?comm='+ datum.code_commune;
+
+  },
+  'typeahead:autocompleted': function(e, datum) {
+    y
+  }
+});
+
+</script>
+
+
+</body>
+</html>
